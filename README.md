@@ -1,2 +1,2 @@
 # AutomatedReviewBot
-Using natural language processing to analyze google reviews for a restaurant. Making recommendations based on the reviews. Also creating a review bot to automatically reply to reviews.
+Using natural language processing to analyze google reviews for a restaurant. We also make recommendations based on the reviews. FInally, we create a review bot to automatically reply to reviews.
