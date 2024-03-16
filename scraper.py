@@ -25,6 +25,7 @@ for element in response.xpath('//div[@data-review-id]'):
     # Append the extracted data to the results list
     results.append({'title': title, 'rating': rating, 'body': body})
 
+driver.close()
 
 for review in results:
     print(
