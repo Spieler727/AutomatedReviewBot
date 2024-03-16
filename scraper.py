@@ -18,19 +18,26 @@ results = []
 
 for element in response.xpath('//div[@data-review-id]'):
     # Extract data from each review
-    title = element.css('div.d4r55::text').get(default='').strip()
+    name = element.css('div.d4r55::text').get(default='').strip()
     rating = element.css('span.kvMYJc::attr(aria-label)').get(default='').replace(' stars', '').strip()
     body = element.css('span.wiI7pd::text').get(default='').strip()
 
-    # Append the extracted data to the results list
-    results.append({'title': title, 'rating': rating, 'body': body})
+    name_exists = False
+    for review in results:
+        if review['name'] == name:
+            name_exists = True
+            break
+        
+    # if not checks if the variable is False. If it is false, execute 
+    if not name_exists:
+        results.append({'name': name, 'rating': rating, 'body': body})
 
 driver.close()
 
 for review in results:
     print(
         "{",
-        "\n\t" + "title:", review['title'],
+        "\n\t" + "name:", review['name'],
         "\n\t" + "rating:", review['rating'],
         "\n\t" + "body:", review['body'],
         "\n},"
