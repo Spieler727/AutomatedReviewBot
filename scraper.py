@@ -25,6 +25,13 @@ for element in response.xpath('//div[@data-review-id]'):
     # Append the extracted data to the results list
     results.append({'title': title, 'rating': rating, 'body': body})
 
-results.append("hello")
-print(results)
+
+for review in results:
+    print(
+        "{",
+        "\n\t" + "title:", review['title'],
+        "\n\t" + "rating:", review['rating'],
+        "\n\t" + "body:", review['body'],
+        "\n},"
+    )
 
