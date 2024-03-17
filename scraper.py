@@ -17,19 +17,21 @@ url = 'https://www.google.com/maps/place/Hudson+Buffet/@41.5286056,-73.8972371,1
 driver.get(url)
    
 # Function to click "More..." to expand on a review
-'''
-def expand_review(element):
-    # In the cases of the class corresponding to the wrong element, an exception is needed
-    try:
-        more_button = element.find_element(By.XPATH, '//*[@id="ChZDSUhNMG9nS0VJQ0FnSUROdnFiUE53EAE"]/span[2]/button')
-        more_button.click()
-        time.sleep(10)
+def expand_review():
+    more_buttons = driver.find_elements(By.CSS_SELECTOR, ".w8nwRe.kyuRq")
     
-    except:
-        pass
-'''
+    for button in more_buttons:
+    # In the cases of the class corresponding to the wrong element, an exception is needed
+        try:
+            # more_button = driver.find_element(By.CSS_SELECTOR, ".w8nwRe.kyuRq")
+            button.click()
+            time.sleep(1)
+            
+        except:
+            pass
 
-
+expand_review()
+WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//div[@data-review-id]')))
 page_content = driver.page_source
 
 response = Selector(text=page_content)
@@ -37,7 +39,7 @@ response = Selector(text=page_content)
 results = []
 
 for element in response.xpath('//div[@data-review-id]'):
-    # expand_review(element)
+    # expand_review()
     
     # Extract data from each review
     name = element.css('div.d4r55::text').get(default='').strip()
