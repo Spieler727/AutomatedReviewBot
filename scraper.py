@@ -32,8 +32,11 @@ def expand_review():
 
 expand_review()
 WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//div[@data-review-id]')))
+
+# retrieves HTML source code of current webpage loaded in WebDriver instance
 page_content = driver.page_source
 
+# creates a Selector object, which allows us to extract data from HTML using XPATH or CSS selectors
 response = Selector(text=page_content)
 
 results = []
@@ -41,8 +44,11 @@ results = []
 for element in response.xpath('//div[@data-review-id]'):
     # expand_review()
     
-    # Extract data from each review
+    # CSS selector is used to target div element with class name 'd4r55' and extracts its corresponding text
+    # get(default='') retrieves the first matching element's text or returns empty string if no match
     name = element.css('div.d4r55::text').get(default='').strip()
+    
+    # Selects span element of class name 'kvMYJc' and retrieves the value of the aria-label attribute, and replaces ' stars' with empty string
     rating = element.css('span.kvMYJc::attr(aria-label)').get(default='').replace(' stars', '').strip()
     body = element.css('span.wiI7pd::text').get(default='').strip()
 
@@ -56,7 +62,7 @@ for element in response.xpath('//div[@data-review-id]'):
     if not name_exists:
         results.append({'name': name, 'rating': rating, 'body': body})
 
-driver.close()
+#driver.close()
 
 for review in results:
     print(
