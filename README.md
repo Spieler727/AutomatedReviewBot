@@ -3,5 +3,6 @@ Using natural language processing to analyze google reviews for a restaurant. We
 
 # Current Progress 
 WebScraper issues:  
-* Same review being appended twice (fixed)  
-* "More..." is displayed as question in diamond within terminal print result, may have to simulate a click to expand on review to get full review.  
+* Same review being appended twice (solved)  
+* Reviews not being expanded (attempt to click on "More" button)
+* Reviews section needs to be scrolled all the way down to load all reviews (still ongoing)
