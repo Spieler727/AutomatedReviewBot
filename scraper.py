@@ -61,9 +61,13 @@ driver.close()
 for review in results:
     print(
         "{",
-        "\n\t" + "name:", review['name'],
-        "\n\t" + "rating:", review['rating'],
-        "\n\t" + "body:", review['body'],
-        "\n},"
+        "\n\t" + "Name:", review['name'],
+        "\n\t" + "Rating:", review['rating'],
+        "\n\t" + "Body:"
     )
+
+    for line in review['body'].split('\n'):
+        print("\t\t", line.strip())
+
+    print("},")
 
