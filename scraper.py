@@ -37,13 +37,19 @@ def scroll_down():
     
     text_from_element = total_reviews_element.text
     total_reviews = int(text_from_element.split()[0])
+    
     review_section = driver.find_element(By.CSS_SELECTOR, '.m6QErb.DxyBCb.kA9KIf.dS8AEf')
-    review_section.send_keys(Keys.END)
-    time.sleep(5)
-    list_of_loaded_reviews = driver.find_elements(By.CSS_SELECTOR, '.jftiEf.fontBodyMedium')
-    current_loaded_reviews = len(list_of_loaded_reviews)
     
-    
+    while True:
+        review_section.send_keys(Keys.END)
+        time.sleep(1)
+        
+        # the CSS selector here is the actual container class for each review
+        list_of_loaded_reviews = driver.find_elements(By.CSS_SELECTOR, '.jftiEf.fontBodyMedium')
+        current_loaded_reviews = len(list_of_loaded_reviews)
+        
+        if current_loaded_reviews >= total_reviews:
+            break
     
     print(total_reviews)
     print(current_loaded_reviews)
@@ -94,7 +100,15 @@ for review in results:
     )
 
     for line in review['body'].split('\n'):
-        print("\t", line.strip())
-
+            # Check if the line contains any non-ASCII characters
+        if any(ord(char) > 127 for char in line):
+            # If there are non-ASCII characters, encode with 'ascii' encoding and ignore errors
+            encoded_line = line.strip().encode('ascii', errors='ignore')
+            decoded_line = encoded_line.decode('ascii')
+        else:
+            # If there are no non-ASCII characters, proceed as before
+            encoded_line = line.strip().encode('utf-8', errors='ignore')
+            decoded_line = encoded_line.decode('utf-8')
+        print("\t", decoded_line)
     print("},")
 
