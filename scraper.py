@@ -3,6 +3,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
 from parsel import Selector
 import time
 
@@ -16,7 +17,7 @@ url = 'https://www.google.com/maps/place/Hudson+Buffet/@41.5286056,-73.8972371,1
 
 driver.get(url)
    
-# Function to click "More..." to expand on a review
+# Function to click the "More" button to expand on a review
 def expand_review():
     more_buttons = driver.find_elements(By.CSS_SELECTOR, ".w8nwRe.kyuRq")
     
@@ -30,8 +31,27 @@ def expand_review():
         except:
             pass
 
-expand_review()
-WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//div[@data-review-id]')))
+
+def scroll_down():
+    total_reviews_element = driver.find_element(By.XPATH, '//*[@id="QA0Szd"]/div/div/div[1]/div[2]/div/div[1]/div/div/div[2]/div[2]/div/div[2]/div[3]')
+    
+    text_from_element = total_reviews_element.text
+    total_reviews = int(text_from_element.split()[0])
+    review_section = driver.find_element(By.CSS_SELECTOR, '.m6QErb.DxyBCb.kA9KIf.dS8AEf')
+    review_section.send_keys(Keys.END)
+    time.sleep(5)
+    list_of_loaded_reviews = driver.find_elements(By.CSS_SELECTOR, '.jftiEf.fontBodyMedium')
+    current_loaded_reviews = len(list_of_loaded_reviews)
+    
+    
+    
+    print(total_reviews)
+    print(current_loaded_reviews)
+
+scroll_down()
+     
+# expand_review()
+WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '.jftiEf.fontBodyMedium')))
 
 # retrieves HTML source code of current webpage loaded in WebDriver instance
 page_content = driver.page_source
@@ -41,7 +61,8 @@ response = Selector(text=page_content)
 
 results = []
 
-for element in response.xpath('//div[@data-review-id]'):
+# for element in response.xpath('//div[@data-review-id]'):
+for element in response.css('.jftiEf.fontBodyMedium'):
     # expand_review()
     
     # CSS selector is used to target div element with class name 'd4r55' and extracts its corresponding text
@@ -73,7 +94,7 @@ for review in results:
     )
 
     for line in review['body'].split('\n'):
-        print("\t\t", line.strip())
+        print("\t", line.strip())
 
     print("},")
 
