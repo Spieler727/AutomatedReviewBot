@@ -5,5 +5,6 @@ Using natural language processing to analyze google reviews for a restaurant. We
 WebScraper issues:  
 * Same review being appended twice (Solved)  
 * Reviews not being expanded (Solved)
-* Reviews section needs to be scrolled all the way down to load all reviews (still ongoing)
-* Quotation marks and apostrophes appear as diamond question marks (Tried utf encoding)
+* Reviews section needs to be scrolled all the way down to load all reviews (Solved)
+* Quotation marks and apostrophes appear as diamond question marks (Solved)
+* Planning on storing additional categories (service, food, atmosphere, etc...)
