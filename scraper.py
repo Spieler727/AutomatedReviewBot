@@ -78,7 +78,10 @@ for element in response.css('.jftiEf.fontBodyMedium'):
     name = element.css('div.d4r55::text').get(default='').strip()
     
     # Selects span element of class name 'kvMYJc' and retrieves the value of the aria-label attribute, and replaces ' stars' with empty string
-    rating = element.css('span.kvMYJc::attr(aria-label)').get(default='').replace(' stars', '').strip()
+    aria_label = element.css('span.kvMYJc::attr(aria-label)').get(default='').strip()
+    rating = re.sub(r'\bstars?\b', '', aria_label).strip()
+    # rating = element.css('span.kvMYJc::attr(aria-label)').get(default='').replace(' stars', '').strip()
+    
     body = element.css('span.wiI7pd::text').get(default='').strip()
 
     name_exists = False
