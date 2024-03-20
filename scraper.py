@@ -6,7 +6,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from parsel import Selector
 import time
-
+import sys
+import re
+sys.stdout.reconfigure(encoding='utf-8')
 options = webdriver.ChromeOptions()
 
 # To make browser stay open
@@ -90,7 +92,7 @@ for element in response.css('.jftiEf.fontBodyMedium'):
         results.append({'name': name, 'rating': rating, 'body': body})
 
 #driver.close()
-
+'''
 for review in results:
     print(
         "{",
@@ -111,4 +113,24 @@ for review in results:
             decoded_line = encoded_line.decode('utf-8')
         print("\t", decoded_line)
     print("},")
+'''
+for review in results:
+    # Encode the name to UTF-8 and decode it back to ensure correct representation
+    name = review['name'].encode('utf-8', errors='ignore').decode('utf-8')
 
+    print("\tName:", name)
+    print("\tRating:", review['rating'])
+
+    # Process each line of the review body
+    for line in review['body'].split('\n'):
+        # Check if the line contains any non-ASCII characters
+        if any(ord(char) > 127 for char in line):
+            # If there are non-ASCII characters, encode with UTF-8
+            encoded_line = line.strip().encode('utf-8', errors='ignore')
+        else:
+            encoded_line = line.strip().encode('utf-8')
+
+        decoded_line = encoded_line.decode('utf-8')
+        print("\t", decoded_line)
+
+    print("}")
