@@ -130,12 +130,16 @@ def print_reviews(reviews_list):
         
 def main():
     driver = initialize_driver()
-    url = 'https://www.google.com/maps/place/Hudson+Buffet/@41.5286056,-73.8972371,17z/data=!4m8!3m7!1s0x89dd36fc398c602f:0x929fb2bcf9639a91!8m2!3d41.5286056!4d-73.8946622!9m1!1b1!16s%2Fg%2F1tdxlwgg?entry=ttu'
+    #url = 'https://www.google.com/maps/place/Hudson+Buffet/@41.5286056,-73.8972371,17z/data=!4m8!3m7!1s0x89dd36fc398c602f:0x929fb2bcf9639a91!8m2!3d41.5286056!4d-73.8946622!9m1!1b1!16s%2Fg%2F1tdxlwgg?entry=ttu'
+    
+    #url = 'https://www.google.com/maps/place/Hunter+College/@40.7678438,-73.967104,17z/data=!4m8!3m7!1s0x89c258eb899f0889:0xb5e90aa7d877ee1f!8m2!3d40.7678398!4d-73.9645291!9m1!1b1!16zL20vMDNxZG0?entry=ttu'
+    
+    url = 'https://www.google.com/maps/place/Stony+Brook+University/@40.908123,-73.1229781,17z/data=!3m1!5s0x89e83f2555ad7601:0x826a7bd7a4739e7f!4m8!3m7!1s0x89e83f33e67438bf:0x734c1ca56abdcc85!8m2!3d40.908119!4d-73.1204032!9m1!1b1!16zL20vMDFsOHQ4?entry=ttu'
     
     navigate_driver_to_url(driver, url)
     
+    # scroll_down(driver)
     # expand_review(driver)
-    scroll_down(driver)
     
     reviews_dict = scrape_reviews(driver)
     
