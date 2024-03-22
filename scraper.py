@@ -135,10 +135,13 @@ def main():
     navigate_driver_to_url(driver, url)
     
     # expand_review(driver)
+    scroll_down(driver)
     
     reviews_dict = scrape_reviews(driver)
     
     print_reviews(reviews_dict)
+    
+    close_driver(driver)
     
 if __name__ == "__main__":
     main()
