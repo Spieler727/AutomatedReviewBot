@@ -8,19 +8,30 @@ from parsel import Selector
 import time
 import sys
 import re
+
 sys.stdout.reconfigure(encoding='utf-8')
-options = webdriver.ChromeOptions()
 
-# To make browser stay open
-options.add_experimental_option("detach", True)
-driver = webdriver.Chrome(options=options)
+def initialize_driver():
+    options = webdriver.ChromeOptions()
 
-url = 'https://www.google.com/maps/place/Hudson+Buffet/@41.5286056,-73.8972371,17z/data=!4m8!3m7!1s0x89dd36fc398c602f:0x929fb2bcf9639a91!8m2!3d41.5286056!4d-73.8946622!9m1!1b1!16s%2Fg%2F1tdxlwgg?entry=ttu'
+    # To make browser stay open
+    options.add_experimental_option("detach", True)
+    driver = webdriver.Chrome(options=options)
+    
+    return driver
 
-driver.get(url)
-   
+def close_driver(driver):
+    # driver.quit()
+    driver.close()
+    
+def navigate_driver_to_url(driver, url):
+    driver.get(url)
+
+def navigate_from_overview():
+    pass
+
 # Function to click the "More" button to expand on a review
-def expand_review():
+def expand_review(driver):
     more_buttons = driver.find_elements(By.CSS_SELECTOR, ".w8nwRe.kyuRq")
     
     for button in more_buttons:
@@ -34,7 +45,7 @@ def expand_review():
             pass
 
 
-def scroll_down():
+def scroll_down(driver):
     total_reviews_element = driver.find_element(By.XPATH, '//*[@id="QA0Szd"]/div/div/div[1]/div[2]/div/div[1]/div/div/div[2]/div[2]/div/div[2]/div[3]')
     
     text_from_element = total_reviews_element.text
@@ -56,84 +67,79 @@ def scroll_down():
     print(total_reviews)
     print(current_loaded_reviews)
 
-scroll_down()
-     
-# expand_review()
-WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '.jftiEf.fontBodyMedium')))
+def scrape_reviews(driver):
+    WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '.jftiEf.fontBodyMedium')))
 
-# retrieves HTML source code of current webpage loaded in WebDriver instance
-page_content = driver.page_source
+    # retrieves HTML source code of current webpage loaded in WebDriver instance
+    page_content = driver.page_source
 
-# creates a Selector object, which allows us to extract data from HTML using XPATH or CSS selectors
-response = Selector(text=page_content)
+    # creates a Selector object, which allows us to extract data from HTML using XPATH or CSS selectors
+    response = Selector(text=page_content)
 
-results = []
+    results = []
 
-# for element in response.xpath('//div[@data-review-id]'):
-for element in response.css('.jftiEf.fontBodyMedium'):
-    # expand_review()
-    
-    # CSS selector is used to target div element with class name 'd4r55' and extracts its corresponding text
-    # get(default='') retrieves the first matching element's text or returns empty string if no match
-    name = element.css('div.d4r55::text').get(default='').strip()
-    
-    # Selects span element of class name 'kvMYJc' and retrieves the value of the aria-label attribute, and replaces ' stars' with empty string
-    aria_label = element.css('span.kvMYJc::attr(aria-label)').get(default='').strip()
-    rating = re.sub(r'\bstars?\b', '', aria_label).strip()
-    # rating = element.css('span.kvMYJc::attr(aria-label)').get(default='').replace(' stars', '').strip()
-    
-    body = element.css('span.wiI7pd::text').get(default='').strip()
-
-    name_exists = False
-    for review in results:
-        if review['name'] == name:
-            name_exists = True
-            break
+    # for element in response.xpath('//div[@data-review-id]'):
+    for element in response.css('.jftiEf.fontBodyMedium'):
         
-    # "if not" checks if the variable is False. If it is false, execute 
-    if not name_exists:
-        results.append({'name': name, 'rating': rating, 'body': body})
+        # CSS selector is used to target div element with class name 'd4r55' and extracts its corresponding text
+        # get(default='') retrieves the first matching element's text or returns empty string if no match
+        name = element.css('div.d4r55::text').get(default='').strip()
+        
+        # Selects span element of class name 'kvMYJc' and retrieves the value of the aria-label attribute, and replaces ' stars' with empty string
+        aria_label = element.css('span.kvMYJc::attr(aria-label)').get(default='').strip()
+        rating = re.sub(r'\bstars?\b', '', aria_label).strip()
+        # rating = element.css('span.kvMYJc::attr(aria-label)').get(default='').replace(' stars', '').strip()
+        
+        body = element.css('span.wiI7pd::text').get(default='').strip()
 
-#driver.close()
-'''
-for review in results:
-    print(
-        "{",
-        "\n\t" + "Name:", review['name'],
-        "\n\t" + "Rating:", review['rating'],
-        "\n\t" + "Body:"
-    )
+        name_exists = False
+        for review in results:
+            if review['name'] == name:
+                name_exists = True
+                break
+            
+        # "if not" checks if the variable is False. If it is false, execute 
+        if not name_exists:
+            results.append({'name': name, 'rating': rating, 'body': body})
+    
+    return results
 
-    for line in review['body'].split('\n'):
+def print_reviews(reviews_list):
+    for review in reviews_list:
+        # Encode the name to UTF-8 and decode it back to ensure correct representation
+        name = review['name'].encode('utf-8', errors='ignore').decode('utf-8')
+
+        print("{")
+        
+        print("\tName:", name)
+        print("\tRating:", review['rating'])
+
+        # Process each line of the review body
+        for line in review['body'].split('\n'):
             # Check if the line contains any non-ASCII characters
-        if any(ord(char) > 127 for char in line):
-            # If there are non-ASCII characters, encode with 'ascii' encoding and ignore errors
-            encoded_line = line.strip().encode('ascii', errors='ignore')
-            decoded_line = encoded_line.decode('ascii')
-        else:
-            # If there are no non-ASCII characters, proceed as before
-            encoded_line = line.strip().encode('utf-8', errors='ignore')
+            if any(ord(char) > 127 for char in line):
+                # If there are non-ASCII characters, encode with UTF-8
+                encoded_line = line.strip().encode('utf-8', errors='ignore')
+            else:
+                encoded_line = line.strip().encode('utf-8')
+
             decoded_line = encoded_line.decode('utf-8')
-        print("\t", decoded_line)
-    print("},")
-'''
-for review in results:
-    # Encode the name to UTF-8 and decode it back to ensure correct representation
-    name = review['name'].encode('utf-8', errors='ignore').decode('utf-8')
+            print("\t", decoded_line)
 
-    print("\tName:", name)
-    print("\tRating:", review['rating'])
-
-    # Process each line of the review body
-    for line in review['body'].split('\n'):
-        # Check if the line contains any non-ASCII characters
-        if any(ord(char) > 127 for char in line):
-            # If there are non-ASCII characters, encode with UTF-8
-            encoded_line = line.strip().encode('utf-8', errors='ignore')
-        else:
-            encoded_line = line.strip().encode('utf-8')
-
-        decoded_line = encoded_line.decode('utf-8')
-        print("\t", decoded_line)
-
-    print("}")
+        print("}")
+        
+def main():
+    driver = initialize_driver()
+    url = 'https://www.google.com/maps/place/Hudson+Buffet/@41.5286056,-73.8972371,17z/data=!4m8!3m7!1s0x89dd36fc398c602f:0x929fb2bcf9639a91!8m2!3d41.5286056!4d-73.8946622!9m1!1b1!16s%2Fg%2F1tdxlwgg?entry=ttu'
+    
+    navigate_driver_to_url(driver, url)
+    
+    # expand_review(driver)
+    
+    reviews_dict = scrape_reviews(driver)
+    
+    print_reviews(reviews_dict)
+    
+if __name__ == "__main__":
+    main()
+    
