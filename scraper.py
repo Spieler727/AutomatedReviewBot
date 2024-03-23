@@ -54,7 +54,7 @@ def check_and_navigate_from_overview(driver):
         #print("Hovered on Overview")
         reviews_button = driver.find_element(By.CSS_SELECTOR, "button[aria-label*=Reviews]")
         reviews_button.click()
-        time.sleep(3)
+        time.sleep(5)
         
     else:
         return
