@@ -27,8 +27,38 @@ def close_driver(driver):
 def navigate_driver_to_url(driver, url):
     driver.get(url)
 
-def navigate_from_overview():
-    pass
+def check_and_navigate_from_overview(driver):
+    # makes driver wait for page to load the overview tab button element or until the 2 sec timer is done
+    WebDriverWait(driver, 2).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "button.hh2c6.G7m0Af")))
+    
+    """
+    #Testing purposes
+    buttons = driver.find_elements(By.CSS_SELECTOR, "button[aria-label*=Overview]")
+    print(len(buttons))
+    """
+    
+    # Can't do it by this selector or set of class names. Check log
+    #overview_button = driver.find_element(By.CSS_SELECTOR, "button.hh2c6.G7m0Af")
+    
+    """
+    Can also use find_element(By.XPATH, "//button[contains(@aria-label, 'Overview')]")
+    The asterisk * used in button[aria-label*=Overview] finds button that contains the substring "Overview"
+    Without it, it will only look for button with the aria-label that contains exactly "Overview"
+    """
+    # can also use find_element(By.XPATH, "//button[contains(@aria-label, 'Overview')]")
+    overview_button = driver.find_element(By.CSS_SELECTOR, "button[aria-label*=Overview]")
+    aria_selected = overview_button.get_attribute("aria-selected")
+    # selected_status = aria_selected == "true"
+    
+    if aria_selected == "true":
+        #print("Hovered on Overview")
+        reviews_button = driver.find_element(By.CSS_SELECTOR, "button[aria-label*=Reviews]")
+        reviews_button.click()
+        time.sleep(2)
+        
+    else:
+        return
+        
 
 # Function to click the "More" button to expand on a review
 def expand_review(driver):
@@ -130,13 +160,15 @@ def print_reviews(reviews_list):
         
 def main():
     driver = initialize_driver()
+    
+    # Reviews url
     #url = 'https://www.google.com/maps/place/Hudson+Buffet/@41.5286056,-73.8972371,17z/data=!4m8!3m7!1s0x89dd36fc398c602f:0x929fb2bcf9639a91!8m2!3d41.5286056!4d-73.8946622!9m1!1b1!16s%2Fg%2F1tdxlwgg?entry=ttu'
     
-    #url = 'https://www.google.com/maps/place/Hunter+College/@40.7678438,-73.967104,17z/data=!4m8!3m7!1s0x89c258eb899f0889:0xb5e90aa7d877ee1f!8m2!3d40.7678398!4d-73.9645291!9m1!1b1!16zL20vMDNxZG0?entry=ttu'
-    
-    url = 'https://www.google.com/maps/place/Stony+Brook+University/@40.908123,-73.1229781,17z/data=!3m1!5s0x89e83f2555ad7601:0x826a7bd7a4739e7f!4m8!3m7!1s0x89e83f33e67438bf:0x734c1ca56abdcc85!8m2!3d40.908119!4d-73.1204032!9m1!1b1!16zL20vMDFsOHQ4?entry=ttu'
+    # Overview url
+    url = "https://www.google.com/maps/place/Hudson+Buffet/@41.5286096,-73.8972371,17z/data=!3m1!4b1!4m6!3m5!1s0x89dd36fc398c602f:0x929fb2bcf9639a91!8m2!3d41.5286056!4d-73.8946622!16s%2Fg%2F1tdxlwgg?entry=ttu"
     
     navigate_driver_to_url(driver, url)
+    check_and_navigate_from_overview(driver)
     
     # scroll_down(driver)
     # expand_review(driver)
@@ -145,7 +177,7 @@ def main():
     
     print_reviews(reviews_dict)
     
-    close_driver(driver)
+    # close_driver(driver)
     
 if __name__ == "__main__":
     main()
