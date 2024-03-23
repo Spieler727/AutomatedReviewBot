@@ -54,8 +54,7 @@ def check_and_navigate_from_overview(driver):
         #print("Hovered on Overview")
         reviews_button = driver.find_element(By.CSS_SELECTOR, "button[aria-label*=Reviews]")
         reviews_button.click()
-        WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '.jftiEf.fontBodyMedium')))
-        #time.sleep(3)
+        time.sleep(3)
         
     else:
         return
@@ -171,14 +170,14 @@ def main():
     navigate_driver_to_url(driver, url)
     check_and_navigate_from_overview(driver)
     
-    # scroll_down(driver)
-    # expand_review(driver)
+    #scroll_down(driver)
+    #expand_review(driver)
     
     reviews_dict = scrape_reviews(driver)
     
     print_reviews(reviews_dict)
     
-    # close_driver(driver)
+    #close_driver(driver)
     
 if __name__ == "__main__":
     main()
