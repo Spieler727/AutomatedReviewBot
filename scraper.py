@@ -132,6 +132,13 @@ def scrape_reviews(driver):
         rating = re.sub(r'\bstars?\b', '', aria_label).strip()
         # rating = element.css('span.kvMYJc::attr(aria-label)').get(default='').replace(' stars', '').strip()
         
+        category_parent_span = element.xpath("//span[@class='RfDO5c']")
+        
+        food_element = category_parent_span.xpath("./[b[text()='Food:']]")
+        
+        print("hi")
+        
+        
         body = element.css('span.wiI7pd::text').get(default='').strip()
 
         name_exists = False
@@ -180,16 +187,16 @@ def main():
     #url = "https://www.google.com/maps/place/Hudson+Buffet/@41.5286096,-73.8972371,17z/data=!3m1!4b1!4m6!3m5!1s0x89dd36fc398c602f:0x929fb2bcf9639a91!8m2!3d41.5286056!4d-73.8946622!16s%2Fg%2F1tdxlwgg?entry=ttu"
     
     navigate_driver_to_url(driver, url)
-    navigate_to_reviews_tab(driver)
+    #navigate_to_reviews_tab(driver)
     
     #scroll_down(driver)
     #expand_review(driver)
     
     reviews_dict = scrape_reviews(driver)
     
-    print_reviews(reviews_dict)
+    #print_reviews(reviews_dict)
     
-    #close_driver(driver)
+    close_driver(driver)
     
 if __name__ == "__main__":
     main()
