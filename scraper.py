@@ -119,8 +119,7 @@ def scrape_reviews(driver):
     response = Selector(text=page_content)
 
     results = []
-    elements = []
-    categories = []
+    c = []
     # for element in response.xpath('//div[@data-review-id]'):
     for element in response.css('.jftiEf.fontBodyMedium'):
         
@@ -139,13 +138,19 @@ def scrape_reviews(driver):
         
         # HAVE TO MAKE SURE REVIEW IS EXPANDED FOR SPAN TO BE DETECTED
         for span_element in element.css('span.RfDO5c'):
-            category = span_element.xpath('.//span/b/text()').get(default='').strip()
-            food_element = span_element.css('span::text').get(default='').strip()
+            category = span_element.css('b::text').get(default='').strip()
+            category_rating = span_element.css('span::text').get(default='').strip()
+            c.append(category_rating)
             
-            elements.append(food_element)
-            categories.append(category)
-        
-        
+            #Meal type and actual type can be grabbed though category_rating code
+            if category == "Food:":
+                food_rating = category_rating
+            elif category == "Service:":
+                service_rating = category_rating
+            elif category == "Atmosphere:":
+                atmosphere_rating = category_rating
+
+            
         
         body = element.css('span.wiI7pd::text').get(default='').strip()
 
@@ -157,10 +162,8 @@ def scrape_reviews(driver):
             
         # "if not" checks if the variable is False. If it is false, execute 
         if not name_exists:
-            results.append({'name': name, 'rating': rating, 'body': body})
-    print(elements)
-    print(food_element)
-    print(category)
+            results.append({'name': name, 'rating': rating, 'body': body, 'food_rating': food_rating, 'service_rating': service_rating, 'atmosphere_rating': atmosphere_rating})
+    print(c)
     return results
 
 def print_reviews(reviews_list):
@@ -171,7 +174,11 @@ def print_reviews(reviews_list):
         print("{")
         
         print("\tName:", name)
-        print("\tRating:", review['rating'])
+        print("\tRating:", review['rating']),
+        print("\tFood:", review['food_rating']),
+        print("\tService:", review['service_rating']),
+        print("\tAtmosphere:", review['atmosphere_rating']),
+        print("\tBody:"),
 
         # Process each line of the review body
         for line in review['body'].split('\n'):
