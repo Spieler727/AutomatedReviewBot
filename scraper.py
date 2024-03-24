@@ -119,7 +119,8 @@ def scrape_reviews(driver):
     response = Selector(text=page_content)
 
     results = []
-
+    elements = []
+    
     # for element in response.xpath('//div[@data-review-id]'):
     for element in response.css('.jftiEf.fontBodyMedium'):
         
@@ -132,11 +133,11 @@ def scrape_reviews(driver):
         rating = re.sub(r'\bstars?\b', '', aria_label).strip()
         # rating = element.css('span.kvMYJc::attr(aria-label)').get(default='').replace(' stars', '').strip()
         
-        category_parent_span = element.xpath("//span[@class='RfDO5c']")
-        
-        food_element = category_parent_span.xpath("./[b[text()='Food:']]")
-        
-        print("hi")
+        # HAVE TO MAKE SURE REVIEW IS EXPANDED FOR SPAN TO BE DETECTED
+        for span_element in element.css('span.RfDO5c'):
+            food_element = span_element.css()
+            
+        elements.append(element)
         
         
         body = element.css('span.wiI7pd::text').get(default='').strip()
@@ -150,7 +151,8 @@ def scrape_reviews(driver):
         # "if not" checks if the variable is False. If it is false, execute 
         if not name_exists:
             results.append({'name': name, 'rating': rating, 'body': body})
-    
+    #print(elements[0])
+    print(num)
     return results
 
 def print_reviews(reviews_list):
@@ -190,8 +192,8 @@ def main():
     #navigate_to_reviews_tab(driver)
     
     #scroll_down(driver)
-    #expand_review(driver)
-    
+    expand_review(driver)
+    time.sleep(5)
     reviews_dict = scrape_reviews(driver)
     
     #print_reviews(reviews_dict)
