@@ -118,7 +118,7 @@ def scrape_reviews(driver):
     # creates a Selector object, which allows us to extract data from HTML using XPATH or CSS selectors
     response = Selector(text=page_content)
 
-    results = []
+    reviews_list = []
     meal_types = ["Breakfast", "Lunch", "Dinner"]
     ce = []
     c = []
@@ -165,17 +165,17 @@ def scrape_reviews(driver):
         body = element.css('span.wiI7pd::text').get(default='').strip()
 
         name_exists = False
-        for review in results:
+        for review in reviews_list:
             if review['name'] == name:
                 name_exists = True
                 break
             
         # "if not" checks if the variable is False. If it is false, execute 
         if not name_exists:
-            results.append({'name': name, 'rating': rating, 'body': body, 'meal_type' : meal_type, 'food_rating': food_rating, 'service_rating': service_rating, 'atmosphere_rating': atmosphere_rating})
+            reviews_list.append({'name': name, 'rating': rating, 'body': body, 'meal_type' : meal_type, 'food_rating': food_rating, 'service_rating': service_rating, 'atmosphere_rating': atmosphere_rating})
     #print(c)
     #print('\n', ce)
-    return results
+    return reviews_list
 
 def print_reviews(reviews_list):
     for review in reviews_list:
