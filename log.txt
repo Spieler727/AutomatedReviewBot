@@ -1,3 +1,19 @@
+Issues:
+* Same review being appended twice (Fixed) - This was fixed by checking if the name of the review's creator was already in the dictionary. The issue occurred due to the HTML element that contained the review, appearing twice. The correct HTML for the actual container that appears once, is currently in use.
+
+* Reviews not being expanded (Fixed) - the expand_review(driver) function searches for the total of "More" buttons currently on the page, by its CSS selector and clicks them
+
+* Reviews section needs to be scrolled all the way down to load all reviews (Fixed) - used the enum class Keys from selenium and its attributue END, which imitates the END key on a keyboard (which scrolls to the end of a page when pressed), on the HTML element that contains all reviews (aka the review_section)
+
+* Quotation marks and apostrophes appear as diamond question marks (Fixed) - used UTF-8 encoding
+
+
+
+
+
+This function was originally made to navigate from the overview tab to reviews tab when given the url to the overview instead.
+Decided to make a function where it would just check if the reviews tab button was active or not instead of checking the button for overview
+Keeping the code here for logic and syntax reminder
 """
 def check_and_navigate_from_overview(driver):
     # makes driver wait for page to load the overview tab button element or until the 2 sec timer is done

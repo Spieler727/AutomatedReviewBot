@@ -9,5 +9,5 @@ WebScraper issues:
 * Quotation marks and apostrophes appear as diamond question marks (Fixed)  
 
 # Additions to be made
-* Planning on storing additional categories (service, food, atmosphere, etc...)
-* Navigating to "Reviews" tab if given the "Overview" url  
+* Planning on storing additional categories (service, food, atmosphere, etc...) (Added)
+* Navigating to "Reviews" tab if given the "Overview" url (Added)
