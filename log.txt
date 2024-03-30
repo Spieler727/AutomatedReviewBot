@@ -5,7 +5,9 @@ Issues:
 
 - Reviews section needs to be scrolled all the way down to load all reviews (Fixed) - used the enum class Keys from selenium and its attributue END, which imitates the END key on a keyboard (which scrolls to the end of a page when pressed), on the HTML element that contains all reviews (aka the review_section)
 
-- Quotation marks and apostrophes appear as diamond question marks (Fixed) - used UTF-8 encoding
+- Quotation marks and apostrophes appear as diamond question marks (Fixed) - used UTF-8 encoding. For the name of the commenter, I had to encode any special characters (which will turn it into a bytes object) and then decoding it back to a readable string that retains the original name and its characters.
+For the body/actual comment of the review, I used the same idea to encode and decode it back if any characters had an ASCII value beyond the ASCII table. any() in this case, will iterate over each element obtained by the expression (in this case, characters in the line of the body) and return True if there 
+is a character beyond the ASCII table.  
 
 Additions:
 - Planning on storing additional categories (service, food, atmosphere, etc...) (Added):

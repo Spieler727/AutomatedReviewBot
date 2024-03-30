@@ -148,7 +148,7 @@ def scrape_reviews(driver):
 
 def print_reviews(reviews_list):
     for review in reviews_list:
-        # Encode the name to UTF-8 and decode it back to ensure correct representation
+        # Encode the name to UTF-8 and decode it back to ensure correct representation (aka keeping the names the way they were originally represented)
         name = review['name'].encode('utf-8', errors='ignore').decode('utf-8')
 
         print("{")
