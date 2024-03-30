@@ -87,8 +87,10 @@ def scrape_reviews(driver):
 
     reviews_list = []
     meal_types = ["Breakfast", "Lunch", "Dinner"]
-    ce = []
-    c = []
+    
+    #ce = []
+    #c = []
+    
     # for element in response.xpath('//div[@data-review-id]'):
     for element in response.css('.jftiEf.fontBodyMedium'):
         
@@ -111,8 +113,8 @@ def scrape_reviews(driver):
             category = span_element.css('b::text').get(default='').strip()
             category_rating = span_element.css('span::text').get(default='').strip()
             
-            c.append(category_rating)
-            ce.append(category)
+            #c.append(category_rating)
+            #ce.append(category)
             
             #Meal type and actual type can be grabbed though category_rating code
             if category_rating.isdigit():

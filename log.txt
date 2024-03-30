@@ -1,14 +1,19 @@
 Issues:
-* Same review being appended twice (Fixed) - This was fixed by checking if the name of the review's creator was already in the dictionary. The issue occurred due to the HTML element that contained the review, appearing twice. The correct HTML for the actual container that appears once, is currently in use.
+- Same review being appended twice (Fixed) - This was fixed by checking if the name of the review's creator was already in the dictionary. The issue occurred due to the HTML element that contained the review, appearing twice. The correct HTML for the actual container that appears once, is currently in use.
 
-* Reviews not being expanded (Fixed) - the expand_review(driver) function searches for the total of "More" buttons currently on the page, by its CSS selector and clicks them
+- Reviews not being expanded (Fixed) - the expand_review(driver) function searches for the total of "More" buttons currently on the page, by its CSS selector and clicks them
 
-* Reviews section needs to be scrolled all the way down to load all reviews (Fixed) - used the enum class Keys from selenium and its attributue END, which imitates the END key on a keyboard (which scrolls to the end of a page when pressed), on the HTML element that contains all reviews (aka the review_section)
+- Reviews section needs to be scrolled all the way down to load all reviews (Fixed) - used the enum class Keys from selenium and its attributue END, which imitates the END key on a keyboard (which scrolls to the end of a page when pressed), on the HTML element that contains all reviews (aka the review_section)
 
-* Quotation marks and apostrophes appear as diamond question marks (Fixed) - used UTF-8 encoding
+- Quotation marks and apostrophes appear as diamond question marks (Fixed) - used UTF-8 encoding
 
+Additions:
+- Planning on storing additional categories (service, food, atmosphere, etc...) (Added):
+Had a lot of trouble why my code wasn't working for the longest time for this part, only to realize that the reviews needed to be expanded first to display them (didn't expand reviews during the test code, hence why these categories weren't being grabbed)
+For food, service, and atmosphere, the strings for them (Ex: "Food:" , "Service:", etc...) were in a bold tag in a span element (this span element was also in a span element by the class name RfDO5c). The category ratings was simply in the span element (this the same span element in the span class RfDO5c). 
+As for the meal types (Lunch, Dinner), when appending and printing out the lists/dictionaries for categories and category_ratings, the string "Meal type" and the meal type answer was being grabbed in the category_rating code (which grabbed the text of the span within the span class RfDO5c). They displayed together in the list as [..., 'Meal type', 'Lunch', ...], so I just had the code check if the result of the category_rating variable was an option in a meal_types list of ["Breakfast", "Lunch", "Dinner"]. Didn't need to grab "Meal type" from its element because we already know the meal type answer belonged to the corresponding reviewer/commenter since we are using a second for_loop within the first for_loop that goes through each review individually, to get these categories and their ratings. 
 
-
+- Navigating to "Reviews" tab if given the "Overview" url (Added)
 
 
 This function was originally made to navigate from the overview tab to reviews tab when given the url to the overview instead.
